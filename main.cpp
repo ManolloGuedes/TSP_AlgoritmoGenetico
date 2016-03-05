@@ -1,9 +1,9 @@
 #include <iostream>
+#include <omp.h>
 #include "tsp.h"
 using namespace std;
 
-int main()
-{
+int main() {
 	srand(time(NULL)); // random numbers
 
 

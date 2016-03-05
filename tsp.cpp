@@ -43,8 +43,8 @@ void Graph::generatesGraph() {
 			break;
 		}
 	}
-
-	int limit_edges = V * (V - 1); /*calcula o limite de arestas*/
+	/*calcula o limite máximo de arestas do grafo*/
+	int limit_edges = V * (V - 1); /*um vértice pode ter saida para todos vértices, menos pra ele mesmo*/
 	int size_edges = rand() % (2 * limit_edges) + limit_edges;
 
 	/*adiciona outras arestas aleatoriamente*/
