@@ -66,7 +66,7 @@ int main() {
 	Graph * graph4 = new Graph(50, 0, true);
 	graph4->showInfoGraph();
 
-	/*parametros: grafo, tamanho da população, taxa de gerações e mutações*/
+	/*parametros: grafo, tamanho da população, número de gerações e mutações*/
 	/*Parâmetro opcional: mostrar ou não a população*/
 	Genetic genetic(graph4, 10, 1000, 5, true);
 
