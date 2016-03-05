@@ -6,7 +6,6 @@ using namespace std;
 int main() {
 	srand(time(NULL)); // random numbers
 
-
 	/*cria o graph1 com parâmetros: numero de vertices e vertice inicial (não faço ideia do que se trata kkk)*/
 	Graph * graph1 = new Graph(5, 0);
 	/*adiciona as arestas*/
