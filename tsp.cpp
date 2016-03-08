@@ -400,17 +400,68 @@ void Genetic::run() {
 		return;
 
 
+// SEM THREAD
+/*
 
 
+	for(int i = 0; i < generations; i++) {
+		int  old_size_population = real_size_population;
 
 
-	// PARTE EM PARALELO
-	// ESSE CASO É PARA 2 THREADS. CADA THREAD EXECUTA METADE DO FOR
-	// DAÍ SEPAREI O FOR EM 2
-	// E INSERI VARIOS OMP CRITTICAL (PARA NÃO ACESSAREM AO MESMO TEMPO)
+		if(real_size_population >= 2) {
+			if(real_size_population == 2) {
+				crossOver(population[0].first, population[1].first);
+			}
+			else {
+
+				int parent1, parent2;
+
+				do {
+					parent1 = rand() % real_size_population;
+					parent2 = rand() % real_size_population;
+				}while(parent1 == parent2);
+
+				crossOver(population[parent1].first, population[parent2].first);
+			}
+
+			int diff_population = real_size_population - old_size_population;
+
+			if(diff_population == 2) {
+				if(real_size_population > size_population) {
+
+					population.pop_back();
+					population.pop_back();
 
 
-	#pragma omp parallel num_threads(1)
+					real_size_population -= 2;
+				}
+			}
+			else if(diff_population == 1) {
+				if(real_size_population > size_population) {
+					population.pop_back();
+					real_size_population--;
+				}
+			}
+		}
+		else {
+			crossOver(population[0].first, population[0].first);
+
+			if(real_size_population > size_population) {
+				population.pop_back();
+				real_size_population--;
+			}
+		}
+
+	}
+
+
+*/
+
+
+// 2 THREADS
+/*
+
+	#pragma omp parallel num_threads(2)
 	{
 
 	int tid = omp_get_thread_num();
@@ -420,62 +471,76 @@ void Genetic::run() {
 			for(int i = 0; i < generations/2; i++) {
 				int  old_size_population = real_size_population;
 
-				/* seleciona dois pais (se existe) que participarão
-					do processo de reprodução */
+				// seleciona dois pais (se existe) que participarão do processo de reprodução
+
 				if(real_size_population >= 2) {
 					if(real_size_population == 2) {
-						/*aplica crossover nos pais*/
+
+						//aplica crossover nos pais
+						#pragma omp critical
 						crossOver(population[0].first, population[1].first);
 					}
 					else {
-						/* real_size_population > 2*/
+
+						// real_size_population > 2
 
 						int parent1, parent2;
 
 						do {
-							/* seleciona dois pais randomicamente */
+
+							//seleciona dois pais randomicamente
+
 							parent1 = rand() % real_size_population;
 							parent2 = rand() % real_size_population;
 						}while(parent1 == parent2);
 
-						/*aplica crossover nos dois pais*/
+						//aplica crossover nos dois pais
+						#pragma omp critical
 						crossOver(population[parent1].first, population[parent2].first);
 					}
 
-					/*recupera a diferença entre os tamanhos de população antigo e atual pra ver se a mesma cresceu*/
+					//recupera a diferença entre os tamanhos de população antigo e atual pra ver se a mesma cresceu
+
 					int diff_population = real_size_population - old_size_population;
 
 					if(diff_population == 2) {
 						if(real_size_population > size_population) {
-							/*remove os dois piores pais da população*/
+
+							//remove os dois piores pais da população
+
 							#pragma omp critical
 							{
 								population.pop_back();
 								population.pop_back();
-							}
-							/*decrementa apos remover os pais*/
-							#pragma omp critical
+
+							//decrementa apos remover os pais
+
 							real_size_population -= 2;
+
+							}
 						}
 					}
 					else if(diff_population == 1) {
 						if(real_size_population > size_population) {
 							#pragma omp critical
 							{
-							population.pop_back(); /*remove o pior pai*/
+							population.pop_back(); //remove o pior pai
 							real_size_population--;
 							}
 						}
 					}
 				}
-				else { /*população só contem um pai*/
-					/*aplica crossover nesse pai*/
+				else {
+
+					//população só contem um pai
+					//aplica crossover nesse pai
+					#pragma omp critical
 					crossOver(population[0].first, population[0].first);
 
 					if(real_size_population > size_population) {
 						#pragma omp critical
 						{
-						population.pop_back(); /*remove o pior pai*/
+						population.pop_back();  //remove o pior pai
 						real_size_population--;
 						}
 					}
@@ -490,76 +555,350 @@ void Genetic::run() {
 			for(int i = generations/2; i < generations; i++) {
 				int  old_size_population = real_size_population;
 
-				/* seleciona dois pais (se existe) que participarão
-					do processo de reprodução */
+				// seleciona dois pais (se existe) que participarão do processo de reprodução
+
 				if(real_size_population >= 2) {
 					if(real_size_population == 2) {
-						/*aplica crossover nos pais*/
+
+						//aplica crossover nos pais
+						#pragma omp critical
 						crossOver(population[0].first, population[1].first);
 					}
 					else {
-						/* real_size_population > 2*/
+
+						// real_size_population > 2
 
 						int parent1, parent2;
 
 						do {
-							/* seleciona dois pais randomicamente */
+
+							//seleciona dois pais randomicamente
+
 							parent1 = rand() % real_size_population;
 							parent2 = rand() % real_size_population;
 						}while(parent1 == parent2);
 
-						/*aplica crossover nos dois pais*/
+						//aplica crossover nos dois pais
+						#pragma omp critical
 						crossOver(population[parent1].first, population[parent2].first);
 					}
 
-					/*recupera a diferença entre os tamanhos de população antigo e atual pra ver se a mesma cresceu*/
+					//recupera a diferença entre os tamanhos de população antigo e atual pra ver se a mesma cresceu
+
 					int diff_population = real_size_population - old_size_population;
 
 					if(diff_population == 2) {
 						if(real_size_population > size_population) {
-							/*remove os dois piores pais da população*/
+
+							//remove os dois piores pais da população
+
 							#pragma omp critical
 							{
 								population.pop_back();
 								population.pop_back();
-							}
-							/*decrementa apos remover os pais*/
-							#pragma omp critical
+
+							//decrementa apos remover os pais
+
 							real_size_population -= 2;
+
+							}
 						}
 					}
 					else if(diff_population == 1) {
 						if(real_size_population > size_population) {
 							#pragma omp critical
 							{
-							population.pop_back(); /*remove o pior pai*/
+							population.pop_back(); //remove o pior pai
 							real_size_population--;
 							}
 						}
 					}
 				}
-				else { /*população só contem um pai*/
-					/*aplica crossover nesse pai*/
+				else {
+
+					//população só contem um pai
+					//aplica crossover nesse pai
+					#pragma omp critical
 					crossOver(population[0].first, population[0].first);
 
 					if(real_size_population > size_population) {
 						#pragma omp critical
 						{
-						population.pop_back(); /*remove o pior pai*/
+						population.pop_back();  //remove o pior pai
 						real_size_population--;
 						}
 					}
 				}
 			}
 
+		}
+
+	} //fim da paralelização
+
+
+*/
+
+
+// 3 THREADS
+
+
+	#pragma omp parallel num_threads(3)
+	{
+
+	int tid = omp_get_thread_num();
+
+		if (tid == 0) {
+
+			for(int i = 0; i < generations/3; i++) {
+				int  old_size_population = real_size_population;
+
+				// seleciona dois pais (se existe) que participarão do processo de reprodução
+
+				if(real_size_population >= 2) {
+					if(real_size_population == 2) {
+
+						//aplica crossover nos pais
+						#pragma omp critical
+						crossOver(population[0].first, population[1].first);
+					}
+					else {
+
+						// real_size_population > 2
+
+						int parent1, parent2;
+
+						do {
+
+							//seleciona dois pais randomicamente
+
+							parent1 = rand() % real_size_population;
+							parent2 = rand() % real_size_population;
+						}while(parent1 == parent2);
+
+						//aplica crossover nos dois pais
+						#pragma omp critical
+						crossOver(population[parent1].first, population[parent2].first);
+					}
+
+					//recupera a diferença entre os tamanhos de população antigo e atual pra ver se a mesma cresceu
+
+					int diff_population = real_size_population - old_size_population;
+
+					if(diff_population == 2) {
+						if(real_size_population > size_population) {
+
+							//remove os dois piores pais da população
+
+							#pragma omp critical
+							{
+								population.pop_back();
+								population.pop_back();
+
+							//decrementa apos remover os pais
+
+							real_size_population -= 2;
+
+							}
+						}
+					}
+					else if(diff_population == 1) {
+						if(real_size_population > size_population) {
+							#pragma omp critical
+							{
+							population.pop_back(); //remove o pior pai
+							real_size_population--;
+							}
+						}
+					}
+				}
+				else {
+
+					//população só contem um pai
+					//aplica crossover nesse pai
+					#pragma omp critical
+					crossOver(population[0].first, population[0].first);
+
+					if(real_size_population > size_population) {
+						#pragma omp critical
+						{
+						population.pop_back();  //remove o pior pai
+						real_size_population--;
+						}
+					}
+				}
+			}
 
 		}
 
 
-	}
+		if (tid == 1) {
+
+			for(int i = generations/3; i < 2*(generations/3); i++) {
+				int  old_size_population = real_size_population;
+
+				// seleciona dois pais (se existe) que participarão do processo de reprodução
+
+				if(real_size_population >= 2) {
+					if(real_size_population == 2) {
+
+						//aplica crossover nos pais
+						#pragma omp critical
+						crossOver(population[0].first, population[1].first);
+					}
+					else {
+
+						// real_size_population > 2
+
+						int parent1, parent2;
+
+						do {
+
+							//seleciona dois pais randomicamente
+
+							parent1 = rand() % real_size_population;
+							parent2 = rand() % real_size_population;
+						}while(parent1 == parent2);
+
+						//aplica crossover nos dois pais
+						#pragma omp critical
+						crossOver(population[parent1].first, population[parent2].first);
+					}
+
+					//recupera a diferença entre os tamanhos de população antigo e atual pra ver se a mesma cresceu
+
+					int diff_population = real_size_population - old_size_population;
+
+					if(diff_population == 2) {
+						if(real_size_population > size_population) {
+
+							//remove os dois piores pais da população
+
+							#pragma omp critical
+							{
+								population.pop_back();
+								population.pop_back();
+
+							//decrementa apos remover os pais
+
+							real_size_population -= 2;
+
+							}
+						}
+					}
+					else if(diff_population == 1) {
+						if(real_size_population > size_population) {
+							#pragma omp critical
+							{
+							population.pop_back(); //remove o pior pai
+							real_size_population--;
+							}
+						}
+					}
+				}
+				else {
+
+					//população só contem um pai
+					//aplica crossover nesse pai
+					#pragma omp critical
+					crossOver(population[0].first, population[0].first);
+
+					if(real_size_population > size_population) {
+						#pragma omp critical
+						{
+						population.pop_back();  //remove o pior pai
+						real_size_population--;
+						}
+					}
+				}
+			}
+
+		}
 
 
+		if (tid == 2) {
 
+			for(int i = 2*(generations/3); i < generations; i++) {
+				int  old_size_population = real_size_population;
+
+				// seleciona dois pais (se existe) que participarão do processo de reprodução
+
+				if(real_size_population >= 2) {
+					if(real_size_population == 2) {
+
+						//aplica crossover nos pais
+						#pragma omp critical
+						crossOver(population[0].first, population[1].first);
+					}
+					else {
+
+						// real_size_population > 2
+
+						int parent1, parent2;
+
+						do {
+
+							//seleciona dois pais randomicamente
+
+							parent1 = rand() % real_size_population;
+							parent2 = rand() % real_size_population;
+						}while(parent1 == parent2);
+
+						//aplica crossover nos dois pais
+						#pragma omp critical
+						crossOver(population[parent1].first, population[parent2].first);
+					}
+
+					//recupera a diferença entre os tamanhos de população antigo e atual pra ver se a mesma cresceu
+
+					int diff_population = real_size_population - old_size_population;
+
+					if(diff_population == 2) {
+						if(real_size_population > size_population) {
+
+							//remove os dois piores pais da população
+
+							#pragma omp critical
+							{
+								population.pop_back();
+								population.pop_back();
+
+							//decrementa apos remover os pais
+
+							real_size_population -= 2;
+
+							}
+						}
+					}
+					else if(diff_population == 1) {
+						if(real_size_population > size_population) {
+							#pragma omp critical
+							{
+							population.pop_back(); //remove o pior pai
+							real_size_population--;
+							}
+						}
+					}
+				}
+				else {
+
+					//população só contem um pai
+					//aplica crossover nesse pai
+					#pragma omp critical
+					crossOver(population[0].first, population[0].first);
+
+					if(real_size_population > size_population) {
+						#pragma omp critical
+						{
+						population.pop_back();  //remove o pior pai
+						real_size_population--;
+						}
+					}
+				}
+			}
+
+		}
+
+	} //fim da paralelização
 
 
 
