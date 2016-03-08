@@ -68,7 +68,7 @@ int main() {
 
 	/*parametros: grafo, tamanho da população, número de gerações e mutações*/
 	/*Parâmetro opcional: mostrar ou não a população*/
-	Genetic genetic(graph4, 10, 1000000, 5, true);
+	Genetic genetic(graph4, 10, 10000, 5, true);
 
 	const clock_t begin_time = clock(); /*recupera o tempo*/
 
