@@ -63,15 +63,19 @@ int main() {
 	graph3->addEdge(2, 1, 35);
 
 	/*cria um grafo randomico. Parametro true é para a geração do grafo*/
-	Graph * graph4 = new Graph(50, 0, true);
+	Graph * graph4 = new Graph(10, 0, true);
 	graph4->showInfoGraph();
 
 	/*parametros: grafo, tamanho da população, número de gerações e mutações*/
 	/*Parâmetro opcional: mostrar ou não a população*/
-	Genetic genetic(graph4, 10, 1000, 5, true);
+	Genetic genetic(graph4, 10, 1000000, 5, true);
 
 	const clock_t begin_time = clock(); /*recupera o tempo*/
+
+
 	genetic.run(); /*roda o algoritmo genético*/
+
+
 	cout << "\n\nTempo para executar o algoritmo genético: " << float(clock () - begin_time) /  CLOCKS_PER_SEC << " segundos."; /*mostra o tempo em segundos*/
 
 	return 0;
