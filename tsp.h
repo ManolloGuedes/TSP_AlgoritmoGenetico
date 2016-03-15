@@ -10,53 +10,53 @@
 
 
 /*classe que descreve o grafo*/
-class Graph {
+class Grafo{
 	private:
-		int V; /*número de vertices*/
-		int total_edges; /*total de arestas*/
-		int initial_vertex; /*vértice inicial*/
-		std::map<std::pair<int, int>, int> map_edges; /*mapa de arestas*/
+		int numVertices; /*número de vertices*/
+		int totalArestas; /*total de arestas*/
+		int verticeInicial; /*vértice inicial*/
+		std::map<std::pair<int, int>, int> mapaArestas; /*mapa de arestas*/
 	public:
-		Graph(int V, int initial_vertex, bool random_graph = false); /*construtor*/
-		void addEdge(int v1, int v2, int weight); /*adiciona uma aresta*/
-		void showGraph(); /*mostra as ligações do grafo*/
-		void generatesGraph(); /*gera um grafo randômico*/
-		void showInfoGraph(); /*mostra informações sobre o grafo*/
-		int existsEdge(int src, int dest); /*verifica a existência de uma aresta*/
-		friend class Genetic; /*acessa os membros privados da classe*/
+		Grafo(int numVertices, int verticeInicial, bool grafoRandomico = false); /*construtor*/
+		void addAresta(int v1, int v2, int weight); /*adiciona uma aresta*/
+		void desenhaGrafo(); /*mostra as ligações do grafo*/
+		void gerarGrafo(); /*gera um grafo randômico*/
+		void infoGrafo(); /*mostra informações sobre o grafo*/
+		int existeAresta(int origem, int destino); /*verifica a existência de uma aresta*/
+		friend class Genetico; /*acessa os membros privados da classe*/
 };
 
-typedef std::pair<std::vector<int>, int> my_pair;
+typedef std::pair<std::vector<int>, int> parIndividuo;
 
 
 /*Ordena o vetor de pares*/
-struct sort_pred {
-	bool operator()(const my_pair& firstElem, const my_pair& secondElem) {
-		return firstElem.second < secondElem.second;
+struct ordenaPar {
+	bool operator()(const parIndividuo& elemento1, const parIndividuo& elemento2) {
+		return elemento1.second < elemento2.second;
 	}
 };
 
 /*classe que descreve o algoritmo genético*/
-class Genetic {
+class Genetico {
 	private:
-		Graph* graph; /*grafo*/
-		std::vector< my_pair > population; /*cada elemento é um par: vetor e custo total*/
-		int size_population; /*tamanho da população*/
-		int real_size_population; /*tamanho real da população*/
-		int generations; /*quantidade de gerações*/
-		int mutation_rate; /*taxa de mutação*/
-		bool show_population; /*flag para mostrar população*/
+		Grafo* grafo; /*grafo*/
+		std::vector< parIndividuo > populacao; /*cada elemento é um par: vetor e custo total*/
+		int tamPopulacao; /*tamanho da população*/
+		int tamRealPopulacao; /*tamanho real da população*/
+		int qtdGeracoes; /*quantidade de gerações*/
+		int taxaMutacao; /*taxa de mutação*/
+		bool mostrar_Populacao; /*flag para mostrar população*/
 	private:
-		void initialPopulation(); /*gera a população inicial*/
+		void gerarPopInicial(); /*gera a população inicial*/
 	public:
-		Genetic(Graph* graph, int amount_population, int generations, int mutation_rate, bool show_population = true); /*construtor*/
-		int isValidSolution(std::vector<int>& solution); /*verifica se a solução é válida*/
-		void showPopulation(); /*mostra a população*/
-		void crossOver(std::vector<int>& parent1, std::vector<int>& parent2); /*realiza o crossover*/
-		void insertBinarySearch(std::vector<int>& child, int total_cost); /*usa busca binária para inserir*/
-		void run(int rank, int size); /*executa o algoritmo genético*/
-		int getCostBestSolution(); /*retorna o custo da melhor solução*/
-		bool existsChromosome(const std::vector<int> & v); /*checa se existe o cromossomo*/
+		Genetico(Grafo* grafo, int quantidadePopulacao, int qtdGeracoes, int taxaMutacao, bool mostrarPopulacao = true); /*construtor*/
+		int solucaoValida(std::vector<int>& solucao); /*verifica se a solução é válida*/
+		void mostrarPopulacao(); /*mostra a população*/
+		void crossOver(std::vector<int>& pai1, std::vector<int>& pai2); /*realiza o crossover*/
+		void insercaoBinaria(std::vector<int>& filho, int custoTotal); /*usa busca binária para inserir*/
+		void executar(int rank, int size); /*executa o algoritmo genético*/
+		int getMelhorCusto(); /*retorna o custo da melhor solução*/
+		bool existeCromossomo(const std::vector<int> & cromossomo); /*checa se existe o cromossomo*/
 };
 
 #endif
