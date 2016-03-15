@@ -104,7 +104,7 @@ Genetico::Genetico(Grafo* grafo, int tamPopulacao, int qtdGeracoes, int taxaMuta
 	this->tamRealPopulacao = 0;
 	this->qtdGeracoes = qtdGeracoes;
 	this->taxaMutacao = taxaMutacao;
-	this->mostrarPopulacao = mostrar_Populacao;
+	this->mostrar_Populacao = mostrar_Populacao;
 }
 
 
@@ -463,7 +463,7 @@ void Genetico::executar(int rank, int size) {
     MPI_Reduce(&populacao[0].second,&custo,1,MPI_INT,MPI_MIN,0,MPI_COMM_WORLD);
 
     if(rank == 0) {
-        if(mostrarPopulacao == true)
+        if(mostrar_Populacao == true)
             mostrarPopulacao(); /*mostra a população*/
     	cout << "\nMelhor solucao: ";
     	for(int i = 0; i < grafo->numVertices; i++)
