@@ -1,4 +1,5 @@
 #include <iostream>
+#include <mpi.h>
 #include <algorithm> // sort, next_permutation
 #include "tsp.h"
 using namespace std;
@@ -392,13 +393,14 @@ void Genetic::crossOver(vector<int>& parent1, vector<int>& parent2) {
 
 
 /*executa algoritmo genético*/
-void Genetic::run() {
+void Genetic::run(int rank, int size) {
 	initialPopulation(); /*recupera população inicial*/
 
 	if(real_size_population == 0)
 		return;
 
-	for(int i = 0; i < generations; i++) {
+	for(int i = 0; i < generations/size; i++) {
+
 		int  old_size_population = real_size_population;
 
 		/* seleciona dois pais (se existe) que participarão
@@ -454,15 +456,21 @@ void Genetic::run() {
 		}
 	}
 
-	if(show_population == true)
-		showPopulation(); /*mostra a população*/
+    int custo;
+    const vector<int>& vec = population[0].first;
 
-	cout << "\nMelhor solucao: ";
-	const vector<int>& vec = population[0].first;
-	for(int i = 0; i < graph->V; i++)
-		cout << vec[i] << " ";
-	cout << graph->initial_vertex;
-	cout << " | Custo: " << population[0].second;
+    //reduz para o processo 0 o menor custo de todos os processos
+    MPI_Reduce(&population[0].second,&custo,1,MPI_INT,MPI_MIN,0,MPI_COMM_WORLD);
+
+    if(rank == 0) {
+        if(show_population == true)
+            showPopulation(); /*mostra a população*/
+    	cout << "\nMelhor solucao: ";
+    	for(int i = 0; i < graph->V; i++)
+    		cout << vec[i] << " ";
+    	cout << vec[0];
+    	cout << " | Custo: " << custo;
+    }
 }
 
 

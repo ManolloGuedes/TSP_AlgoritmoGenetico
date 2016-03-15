@@ -54,7 +54,7 @@ class Genetic {
 		void showPopulation(); /*mostra a população*/
 		void crossOver(std::vector<int>& parent1, std::vector<int>& parent2); /*realiza o crossover*/
 		void insertBinarySearch(std::vector<int>& child, int total_cost); /*usa busca binária para inserir*/
-		void run(); /*executa o algoritmo genético*/
+		void run(int rank, int size); /*executa o algoritmo genético*/
 		int getCostBestSolution(); /*retorna o custo da melhor solução*/
 		bool existsChromosome(const std::vector<int> & v); /*checa se existe o cromossomo*/
 };
